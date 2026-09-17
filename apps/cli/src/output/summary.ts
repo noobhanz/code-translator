@@ -52,6 +52,17 @@ export function printInspectSummary(
     }
   }
 
+  const source = stats.sourceAnalysis;
+  if (source.supportedFiles > 0 || source.parsedFiles > 0) {
+    logger.info("");
+    logger.info("Source analysis:");
+    logger.info(`  ${padLabel("Parsed files")} ${source.parsedFiles}`);
+    logger.info(`  ${padLabel("Symbols")} ${source.symbolCount}`);
+    logger.info(`  ${padLabel("Imports")} ${source.importCount}`);
+    logger.info(`  ${padLabel("Exports")} ${source.exportCount}`);
+    logger.info(`  ${padLabel("Syntax warnings")} ${source.filesWithSyntaxErrors}`);
+  }
+
   logger.info("");
   logger.info("Package manager:");
   logger.info(`  ${analysis.packageManager ?? "unknown"}`);

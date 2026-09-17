@@ -10,6 +10,7 @@ export default defineConfig({
       "@codetranslate/shared": path.join(root, "packages/shared/src/index.ts"),
       "@codetranslate/core": path.join(root, "packages/core/src/index.ts"),
       "@codetranslate/ingest": path.join(root, "packages/ingest/src/index.ts"),
+      "@codetranslate/parser": path.join(root, "packages/parser/src/index.ts"),
     },
   },
   test: {

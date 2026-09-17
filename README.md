@@ -5,7 +5,8 @@ Understand what is inside a software repository before asking AI to explain it.
 Code Translator is an open-source codebase understanding project.
 
 The project starts with deterministic repository analysis: file discovery,
-classification, manifests, technologies, and structured metadata.
+classification, manifests, technologies, JavaScript/TypeScript parsing,
+and structured metadata.
 
 AI explanation comes later.
 
@@ -13,7 +14,7 @@ AI explanation comes later.
 
 Most “explain this repo” tools jump straight to a model. That skips the boring work that actually makes explanations trustworthy: what files exist, which ones are source, which package manager is in play, and what the manifests claim is installed.
 
-Milestone A is that foundation. It is a local, static, testable scanner. It never executes repository code.
+Milestone A is the scanner foundation. Milestone B adds Tree-sitter parsing of JavaScript and TypeScript. The tool never executes repository code.
 
 ## Current capabilities
 
@@ -27,10 +28,13 @@ Milestone A is that foundation. It is a local, static, testable scanner. It neve
 - Parse `package.json` as data (not by running Node against it)
 - Detect likely package managers from lockfiles / `packageManager`
 - Emit **installed** technology hints from package names only
+- Parse JavaScript, TypeScript, JSX, and TSX with Tree-sitter
+- Extract functions, classes, methods, types, constants, components, and hooks
+- Extract imports and exports
 - Write `.codetranslate/repository.json`
-- Print a human summary, or `--json` for scripts
+- Print a human summary, list symbols, or emit `--json` for scripts
 
-Not in Milestone A: AST parsing, symbols, import graphs, framework route detection, AI, or a web UI.
+Not yet implemented: import resolution, dependency graphs, framework route detection, runtime analysis, AI, or a web UI.
 
 ## Installation
 
@@ -61,6 +65,8 @@ pnpm codetranslate inspect ./fixtures/next-basic
 pnpm codetranslate inspect ./fixtures/next-basic --json
 pnpm codetranslate inspect ./fixtures/next-basic --debug
 pnpm codetranslate inspect ./fixtures/next-basic --output ./tmp-out
+pnpm codetranslate symbols ./fixtures/next-basic
+pnpm codetranslate symbols ./fixtures/next-basic --json
 ```
 
 `--json` writes the analysis document to stdout and still saves `.codetranslate/repository.json` unless `--output` is set. Progress text is suppressed on stdout in this mode.
@@ -98,6 +104,13 @@ Languages:
   TypeScript       2
   YAML             1
 
+Source analysis:
+  Parsed files     5
+  Symbols          10
+  Imports          7
+  Exports          6
+  Syntax warnings  0
+
 Package manager:
   pnpm
 
@@ -120,21 +133,21 @@ Exact counts depend on the repository. Technology lines mean “listed in packag
 See [docs/architecture.md](docs/architecture.md) and [docs/codebase-ir.md](docs/codebase-ir.md).
 
 ```text
-LocalRepositorySource → RepositorySnapshot → RepositoryAnalysis → CLI / JSON
+LocalRepositorySource → RepositorySnapshot → parser registry → RepositoryAnalysis → CLI / JSON
 ```
 
-Schema version: `0.1`.
+Schema version: `0.2`.
 
 ## Security
 
 See [SECURITY.md](SECURITY.md).
 
-Repositories are untrusted. The scanner does not install dependencies, run scripts, evaluate config files, or print secrets.
+Repositories are untrusted. The scanner does not install dependencies, run scripts, evaluate config files, or print secrets. JavaScript and TypeScript are parsed as text, never executed.
 
 ## Roadmap
 
-- **Milestone A (this release):** local scan, classification, manifests, IR JSON
-- **Milestone B:** Tree-sitter parsing and symbol extraction
+- **Milestone A:** local scan, classification, manifests, IR JSON
+- **Milestone B (this release):** Tree-sitter JS/TS parsing and symbol extraction
 - Later: import/dependency graphs, framework detectors, optional AI explanations, web UI
 
 ## Contributing

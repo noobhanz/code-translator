@@ -1,24 +1,32 @@
 # Architecture
 
-Code Translator is built as a small TypeScript monorepo. Milestone A implements repository ingest and a versioned Codebase IR. It does not parse source, build graphs, call models, or ship a UI.
+Code Translator is a small TypeScript monorepo. Milestone A discovers and classifies files. Milestone B parses JavaScript/TypeScript with Tree-sitter and extracts language-neutral symbols, imports, and exports.
+
+It does not build graphs, resolve imports, call models, or ship a UI.
 
 ## Pipeline
 
 ```text
-Local directory
-      ↓
 LocalRepositorySource
-      ↓
+        ↓
 RepositorySnapshot
-      ↓
-RepositoryAnalyzer (manifests, technologies, statistics)
-      ↓
-RepositoryAnalysis / Codebase IR
-      ↓
-CLI + .codetranslate/repository.json
+        ↓
+RepositoryAnalyzer
+        │
+        ├── manifest analysis
+        │
+        └── parser registry
+                ↓
+          LanguageAnalyzer
+                ↓
+           FileAnalysis
+        ↓
+RepositoryAnalysis
+        ↓
+CLI / JSON
 ```
 
-The scanner is not coupled to future AI or UI consumers. Those will read `RepositoryAnalysis`, not walk the filesystem themselves.
+The scanner never walks the filesystem during parsing. Parsers consume `SnapshotFile` records already discovered by ingest.
 
 ## Packages
 
@@ -27,21 +35,25 @@ The scanner is not coupled to future AI or UI consumers. Those will read `Reposi
 | `@codetranslate/shared` | Path normalization, SHA-256, IDs, logger, scan constants              |
 | `@codetranslate/core`   | Zod schemas, diagnostics, snapshot types, analysis assembly, JSON I/O |
 | `@codetranslate/ingest` | Local source, ignore rules, classification, hashing, manifest parsing |
-| `@codetranslate/cli`    | `codetranslate inspect`                                               |
+| `@codetranslate/parser` | Tree-sitter registry, JS/TS/JSX/TSX analyzers, symbol extraction      |
+| `@codetranslate/cli`    | `codetranslate inspect` and `codetranslate symbols`                   |
 
-## Local repository source
+Ingest remains responsible for filesystem, ignores, hashes, binary detection, and classification.
 
-`LocalRepositorySource` implements `RepositorySource.getSnapshot()`. Later sources (Git, GitHub, ZIP, paste, IDE) should produce the same `RepositorySnapshot` so core analysis stays unchanged.
+The parser is responsible for syntax trees, symbols, imports, exports, source ranges, and parse diagnostics. Tree-sitter nodes are internal and never serialized.
 
-Snapshot files store path, size, hash, category, language, and binary flags. They do not store file contents. `snapshot.readText(path)` is the only content access, and only for included non-binary files.
+## Parser selection
 
-## Ignore and safety
+A small in-process registry maps file extensions to analyzers:
 
-Ignore matching uses the `ignore` package (gitignore semantics) plus internal defaults:
+- `.js` / `.mjs` / `.cjs` → JavaScript
+- `.jsx` → JSX
+- `.ts` → TypeScript
+- `.tsx` → TSX
 
-`.git`, `node_modules`, `.next`, `dist`, `build`, `coverage`, `.cache`, `.turbo`, `.vercel`, `target`, `__pycache__`, `.codetranslate`, `vendor`, `.generated`
+Unsupported languages stay in the IR without `analysis`. Binary, ignored, vendor, generated, asset, and documentation files are not parsed.
 
-Root `.gitignore` is loaded in addition to those defaults. `.codetranslate/` is always ignored so the tool cannot scan its own output.
+`next.config.ts` may be parsed as TypeScript source. It is never executed.
 
 ## Classification precedence
 
@@ -51,16 +63,11 @@ When multiple categories match:
 test > config > documentation > generated > vendor > source > asset > unknown
 ```
 
-Lockfiles are generated, not source. `next.config.ts` is config and is never executed.
-
 ## Future boundaries (not implemented)
 
 ```text
-parsers          Tree-sitter, symbols, imports
-graphs           dependency / call graphs
+graphs           import resolution, dependency / call graphs
 detectors        framework routes, env usage, Prisma
 AI               explanations, chat, embeddings
 web UI           browser app, OAuth, uploads
 ```
-
-Milestone A stops at structured repository metadata.

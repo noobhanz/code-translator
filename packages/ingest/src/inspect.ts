@@ -4,6 +4,7 @@ import {
   type RepositoryAnalysis,
   type ScanOptions,
 } from "@codetranslate/core";
+import { analyzeSnapshotSources } from "@codetranslate/parser";
 import type { Logger } from "@codetranslate/shared";
 import { LocalRepositorySource } from "./local/source";
 import { parseManifests } from "./manifests/detect";
@@ -29,13 +30,26 @@ export async function inspectRepository(
   const parsedManifests = await parseManifests(snapshot);
   const packageManager = detectPackageManager(snapshot.files, parsedManifests.manifests);
   const detectedTechnologies = detectInstalledTechnologies(parsedManifests.manifests);
+  const parsedSources = await analyzeSnapshotSources(
+    snapshot,
+    {
+      maxParserFileBytes: scanOptions.maxParserFileBytes,
+      concurrency: scanOptions.concurrency,
+    },
+    logger,
+  );
 
   const analysis = buildRepositoryAnalysis({
     snapshot,
     manifests: parsedManifests.manifests,
     detectedTechnologies,
-    extraDiagnostics: [...parsedManifests.diagnostics, ...packageManager.diagnostics],
+    extraDiagnostics: [
+      ...parsedManifests.diagnostics,
+      ...packageManager.diagnostics,
+      ...parsedSources.diagnostics,
+    ],
     packageManager: packageManager.packageManager,
+    fileAnalyses: parsedSources.analyses,
   });
 
   return {

@@ -2,4 +2,4 @@
 
 See the root [SECURITY.md](../SECURITY.md).
 
-Milestone A never executes repository code. Analysis is static filesystem inspection of an untrusted tree.
+The tool never executes repository code. Analysis is static filesystem inspection plus Tree-sitter parsing of untrusted source text.

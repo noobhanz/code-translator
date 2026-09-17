@@ -1,6 +1,6 @@
 {
   "name": "code-translator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Understand the structure of a software repository.",
   "license": "Apache-2.0",
@@ -21,7 +21,10 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild"
+      "esbuild",
+      "tree-sitter",
+      "tree-sitter-javascript",
+      "tree-sitter-typescript"
     ]
   },
   "devDependencies": {

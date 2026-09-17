@@ -3,6 +3,7 @@ import { SCHEMA_VERSION } from "@codetranslate/shared";
 import { diagnosticSchema } from "./diagnostics";
 import { fileNodeSchema } from "./files";
 import { basicTechnologyDetectionSchema, manifestSummarySchema } from "./manifests";
+import { sourceAnalysisStatisticsSchema } from "./source";
 
 export const schemaVersionSchema = z.literal(SCHEMA_VERSION);
 
@@ -30,6 +31,7 @@ export const repositoryStatisticsSchema = z.object({
   categoryCounts: z.record(z.string(), z.number().int().nonnegative()),
   languageCounts: z.record(z.string(), z.number().int().nonnegative()),
   extensionCounts: z.record(z.string(), z.number().int().nonnegative()),
+  sourceAnalysis: sourceAnalysisStatisticsSchema,
 });
 
 export const repositoryAnalysisSchema = z.object({

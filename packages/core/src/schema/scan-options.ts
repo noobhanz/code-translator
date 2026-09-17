@@ -3,6 +3,7 @@ import {
   DEFAULT_CONCURRENCY,
   DEFAULT_MAX_FILE_BYTES,
   DEFAULT_MAX_FILES,
+  DEFAULT_MAX_PARSER_FILE_BYTES,
   DEFAULT_MAX_REPOSITORY_BYTES,
 } from "@codetranslate/shared";
 
@@ -11,6 +12,7 @@ export const scanOptionsSchema = z.object({
   maxRepositoryBytes: z.number().int().positive().default(DEFAULT_MAX_REPOSITORY_BYTES),
   maxFiles: z.number().int().positive().default(DEFAULT_MAX_FILES),
   concurrency: z.number().int().positive().default(DEFAULT_CONCURRENCY),
+  maxParserFileBytes: z.number().int().positive().default(DEFAULT_MAX_PARSER_FILE_BYTES),
 });
 
 export type ScanOptions = z.infer<typeof scanOptionsSchema>;

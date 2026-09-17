@@ -1,6 +1,6 @@
-export const SCHEMA_VERSION = "0.1" as const;
+export const SCHEMA_VERSION = "0.2" as const;
 
-export const ANALYZER_VERSION = "0.1.0";
+export const ANALYZER_VERSION = "0.2.0";
 
 export const OUTPUT_DIR_NAME = ".codetranslate";
 
@@ -15,3 +15,8 @@ export const DEFAULT_MAX_FILES = 20_000;
 export const DEFAULT_CONCURRENCY = 16;
 
 export const BINARY_PEEK_BYTES = 8_192;
+
+export const DEFAULT_MAX_PARSER_FILE_BYTES = 1_000_000;
+
+/** Anonymous default exports use this stable display name. */
+export const DEFAULT_EXPORT_DISPLAY_NAME = "default";

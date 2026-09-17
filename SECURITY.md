@@ -2,17 +2,19 @@
 
 Code Translator treats every analyzed repository as **untrusted input**.
 
-## What Milestone A does
+## What the tool does
 
-Milestone A is static filesystem inspection only.
+Analysis is static. Milestone A inspects the filesystem. Milestone B parses JavaScript/TypeScript with Tree-sitter.
 
 1. Repositories are treated as untrusted.
 2. Repository code is never executed during normal analysis.
 3. Lifecycle scripts are never run. The scanner does not invoke `npm install`, `pnpm install`, `yarn`, `npm run`, `pnpm run`, `node`, `npx`, `pip`, `python`, `cargo`, `make`, or repository shell scripts.
-4. JavaScript/TypeScript configuration files such as `next.config.ts` are classified, never evaluated.
-5. Sensitive files such as `.env`, `*.pem`, `*.key`, `id_rsa`, and `credentials.json` are skipped. Their contents are not read, hashed, printed, or written to `repository.json`.
-6. Symlinks that leave the repository, and all other symlinks, are skipped.
-7. File-size, repository-size, and file-count limits bound how much is read.
+4. JavaScript/TypeScript configuration files such as `next.config.ts` may be parsed as text. They are never evaluated, imported, or run through `ts-node` / Babel / ESLint.
+5. The parser does not `eval`, `new Function`, `import()`, or `require()` repository source. `import`/`require` in analyzed files are syntax only.
+6. Only Code Translator's own Tree-sitter grammars are used. Repository-installed grammars are ignored.
+7. Sensitive files such as `.env`, `*.pem`, `*.key`, `id_rsa`, and `credentials.json` are skipped. Their contents are not read, hashed, printed, or written to `repository.json`.
+8. Symlinks that leave the repository, and all other symlinks, are skipped.
+9. File-size, repository-size, file-count, and parser-size limits bound how much is read.
 
 ## What this tool is not
 

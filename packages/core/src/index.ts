@@ -44,6 +44,32 @@ export {
 export { buildRepositoryAnalysis, type AnalyzeSnapshotInput } from "./pipeline/analyze";
 export { snapshotFileToNode, sortFileNodes } from "./pipeline/file-nodes";
 export { parseAnalysisJson, serializeAnalysis } from "./pipeline/serialize";
-export { computeStatistics } from "./pipeline/statistics";
+export {
+  computeSourceAnalysisStatistics,
+  computeStatistics,
+  emptySourceAnalysisStatistics,
+} from "./pipeline/statistics";
+export {
+  exportDeclarationSchema,
+  exportTypeSchema,
+  fileAnalysisSchema,
+  importDeclarationSchema,
+  importKindSchema,
+  importSpecifierSchema,
+  sourceAnalysisStatisticsSchema,
+  sourceLocationSchema,
+  symbolKindSchema,
+  symbolNodeSchema,
+  type ExportDeclaration,
+  type ExportType,
+  type FileAnalysis,
+  type ImportDeclaration,
+  type ImportKind,
+  type ImportSpecifier,
+  type SourceAnalysisStatistics,
+  type SourceLocation,
+  type SymbolKind,
+  type SymbolNode,
+} from "./schema/source";
 export { resolveOutputFilePath, writeRepositoryAnalysis } from "./pipeline/write-output";
 export type { RepositorySnapshot, RepositorySource, SnapshotFile } from "./types/snapshot";

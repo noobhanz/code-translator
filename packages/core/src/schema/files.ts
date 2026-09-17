@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { fileAnalysisSchema } from "./source";
 
 export const fileCategorySchema = z.enum([
   "source",
@@ -22,6 +23,7 @@ export const fileNodeSchema = z.object({
   binary: z.boolean(),
   ignored: z.boolean(),
   ignoreReason: z.string().optional(),
+  analysis: fileAnalysisSchema.optional(),
 });
 
 export type FileCategory = z.infer<typeof fileCategorySchema>;

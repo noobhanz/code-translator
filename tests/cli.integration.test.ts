@@ -35,6 +35,7 @@ describe("CLI", () => {
     expect(result.code).toBe(0);
     expect(result.stdout).toContain("Code Translator");
     expect(result.stdout).toContain("inspect");
+    expect(result.stdout).toContain("symbols");
     expect(result.stdout).toContain("--debug");
     expect(result.stdout).toContain("--json");
     expect(result.stdout).toContain("--output");
@@ -47,6 +48,13 @@ describe("CLI", () => {
     const analysis = parseAnalysisJson(result.stdout);
     expect(analysis.repository.name).toBe("next-basic");
     expect(analysis.detectedTechnologies.some((tech) => tech.name === "Next.js")).toBe(true);
+  });
+
+  it("lists symbols for next-basic", async () => {
+    const result = await runCli(["symbols", "./fixtures/next-basic"]);
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain("WelcomeCard");
+    expect(result.stdout).toContain("component");
   });
 
   it("fails with a readable error for a missing path", async () => {

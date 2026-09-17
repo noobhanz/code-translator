@@ -3,6 +3,7 @@ import type { RepositoryAnalysis } from "../schema/analysis";
 import { repositoryAnalysisSchema } from "../schema/analysis";
 import type { BasicTechnologyDetection, ManifestSummary } from "../schema/manifests";
 import type { Diagnostic } from "../schema/diagnostics";
+import type { FileAnalysis } from "../schema/source";
 import type { RepositorySnapshot } from "../types/snapshot";
 import { snapshotFileToNode, sortFileNodes } from "./file-nodes";
 import { computeStatistics } from "./statistics";
@@ -13,11 +14,14 @@ export interface AnalyzeSnapshotInput {
   detectedTechnologies: BasicTechnologyDetection[];
   extraDiagnostics?: Diagnostic[];
   packageManager?: string;
+  fileAnalyses?: ReadonlyMap<string, FileAnalysis>;
 }
 
 export function buildRepositoryAnalysis(input: AnalyzeSnapshotInput): RepositoryAnalysis {
   const files = sortFileNodes(
-    input.snapshot.files.map((file) => snapshotFileToNode(input.snapshot.metadata.id, file)),
+    input.snapshot.files.map((file) =>
+      snapshotFileToNode(input.snapshot.metadata.id, file, input.fileAnalyses?.get(file.path)),
+    ),
   );
 
   const diagnostics = [...input.snapshot.diagnostics, ...(input.extraDiagnostics ?? [])];

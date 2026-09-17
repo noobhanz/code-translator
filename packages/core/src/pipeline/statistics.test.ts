@@ -79,7 +79,8 @@ describe("JSON serialization", () => {
     expect(json.endsWith("\n")).toBe(true);
 
     const parsed = parseAnalysisJson(json);
-    expect(parsed.schemaVersion).toBe("0.1");
+    expect(parsed.schemaVersion).toBe("0.2");
+    expect(parsed.statistics.sourceAnalysis.symbolCount).toBe(0);
     expect(parsed.files[0]?.path).toBe("src/index.ts");
   });
 });

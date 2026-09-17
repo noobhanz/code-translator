@@ -13,7 +13,7 @@ describe("inspect fixtures/next-basic", () => {
   it("produces a stable, relative, package-metadata-aware analysis", async () => {
     const { analysis } = await inspectRepository(fixture);
 
-    expect(analysis.schemaVersion).toBe("0.1");
+    expect(analysis.schemaVersion).toBe("0.2");
     expect(analysis.repository.name).toBe("next-basic");
     expect(analysis.repository.id.startsWith("repo_")).toBe(true);
 
@@ -48,6 +48,15 @@ describe("inspect fixtures/next-basic", () => {
     const json = serializeAnalysis(analysis);
     const parsed = parseAnalysisJson(json);
     expect(parsed.files.map((file) => file.path)).toEqual(analysis.files.map((file) => file.path));
+
+    const welcome = analysis.files.find((file) => file.path === "components/WelcomeCard.tsx");
+    expect(welcome?.analysis?.symbols).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "WelcomeCard", kind: "component", exported: true }),
+      ]),
+    );
+    expect(json).not.toContain("treeSitter");
+    expect(json).not.toContain("nodeType");
   });
 
   it("marks binary fixture files as binary", async () => {
