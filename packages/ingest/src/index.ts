@@ -11,4 +11,4 @@ export { parseManifests } from "./manifests/detect";
 export { parsePackageManifest } from "./manifests/package-json";
 export { detectPackageManager } from "./manifests/package-manager";
 export { detectInstalledTechnologies } from "./manifests/technologies";
-export { inspectRepository, type InspectResult } from "./inspect";
+export { inspectRepository, inspectSource, type InspectResult } from "./inspect";

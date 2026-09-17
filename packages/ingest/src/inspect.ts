@@ -3,6 +3,7 @@ import {
   DEFAULT_SCAN_OPTIONS,
   snapshotFileToNode,
   type RepositoryAnalysis,
+  type RepositorySource,
   type ScanOptions,
 } from "@codetranslate/core";
 import { detectApplication } from "@codetranslate/application";
@@ -26,6 +27,15 @@ export async function inspectRepository(
 ): Promise<InspectResult> {
   const scanOptions: ScanOptions = { ...DEFAULT_SCAN_OPTIONS, ...options };
   const source = new LocalRepositorySource(inputPath, scanOptions, logger);
+  return inspectSource(source, scanOptions, logger);
+}
+
+export async function inspectSource(
+  source: RepositorySource,
+  options: Partial<ScanOptions> = {},
+  logger?: Logger,
+): Promise<InspectResult> {
+  const scanOptions: ScanOptions = { ...DEFAULT_SCAN_OPTIONS, ...options };
   const snapshot = await source.getSnapshot();
 
   logger?.debug(`discovered ${snapshot.files.length} files`);

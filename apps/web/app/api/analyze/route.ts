@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
+import { isHostedMode } from "@codetranslate/hosted";
 import { analyzeLocalProject, toUserError } from "../../../src/lib/analyze-local";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request): Promise<Response> {
+  if (isHostedMode()) {
+    return NextResponse.json(
+      { error: "Local path analysis is available in the open-source app." },
+      { status: 404 },
+    );
+  }
   let body: unknown;
   try {
     body = await request.json();

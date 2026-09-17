@@ -126,3 +126,165 @@ details {
 .flow span.arrow {
   color: #a8a29e;
 }
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.site-header nav {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.brand {
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+}
+
+a {
+  color: inherit;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin: 1.5rem 0 1rem;
+}
+
+.button-link,
+.button-secondary {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.85rem 1.4rem;
+  text-decoration: none;
+  background: #1c1917;
+  color: #fafaf9;
+}
+
+.button-secondary {
+  background: transparent;
+  color: #1c1917;
+  border: 1px solid #d6d3d1;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.page-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.app-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.2rem;
+}
+
+.app-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.badge {
+  font-size: 0.8rem;
+  background: #e7e5e4;
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+}
+
+.repo-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.repo-button {
+  width: 100%;
+  text-align: left;
+  background: white;
+  color: #1c1917;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.tabs a {
+  text-decoration: none;
+  color: #78716c;
+}
+
+.tabs a.active {
+  color: #1c1917;
+  font-weight: 600;
+}
+
+.history {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.history a {
+  display: grid;
+  text-decoration: none;
+  background: white;
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+}
+
+.details-sha {
+  font-size: 0.85rem;
+}
+
+.banner {
+  background: #e7e5e4;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+}
+
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+button.danger {
+  background: transparent;
+  color: #9f1239;
+  border: 1px solid #fecdd3;
+}

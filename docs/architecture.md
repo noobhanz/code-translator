@@ -6,6 +6,7 @@ Code Translator is a small TypeScript monorepo.
 - Milestone B parses JavaScript/TypeScript with Tree-sitter.
 - Milestone C resolves module specifiers and builds a static dependency graph.
 - Milestone D detects application structure and presents it in `understand` and a small web UI.
+- Milestone E adds a hosted convenience layer: GitHub login, saved apps, and analysis history.
 
 It does not call models or execute repository code.
 
@@ -28,7 +29,7 @@ Application detection
         ↓
 ApplicationModel
         ↓
-Understand CLI / Web UI
+Understand CLI / local web / hosted GitHub apps
 ```
 
 The graph package never walks the filesystem and never reparses source. It consumes file records, `FileAnalysis` imports/exports, and config/manifest data.
@@ -43,8 +44,9 @@ The graph package never walks the filesystem and never reparses source. It consu
 | `@codetranslate/parser`      | Tree-sitter registry, JS/TS/JSX/TSX analyzers, symbol extraction      |
 | `@codetranslate/graph`       | Module resolution, dependency graph, structural importance            |
 | `@codetranslate/application` | Framework, page, area, and service detection for humans               |
+| `@codetranslate/hosted`      | GitHub access, persistence, and hosted analysis orchestration         |
 | `@codetranslate/cli`         | `understand`, `inspect`, `symbols`, `dependencies`, `graph`           |
-| `@codetranslate/web`         | Local development UI for application overviews                        |
+| `@codetranslate/web`         | Local UI and hosted GitHub product                                    |
 
 Ownership:
 
@@ -53,8 +55,13 @@ ingest       → filesystem facts
 parser       → syntax facts
 graph        → cross-file/module relationships
 application  → human-recognizable application structure
+hosted       → accounts, GitHub, saved apps (depends on engine, never the reverse)
 core         → schemas and analysis assembly
 ```
+
+The hosted package may call the engine. The engine must not import hosted auth, Prisma, or GitHub APIs.
+
+See [docs/hosted.md](hosted.md) for the local vs hosted split.
 
 ## Module resolution
 
@@ -101,8 +108,9 @@ Human-facing confidence:
 ## Future boundaries (not implemented)
 
 ```text
-detectors        framework routes, entrypoints, layouts
 call graphs      symbol references, function calls
 AI               explanations, chat, embeddings
-web UI           browser app, OAuth, uploads
+webhooks         automatic GitHub sync
+billing          paid plans
+change summaries human-readable history diffs
 ```

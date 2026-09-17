@@ -1,9 +1,10 @@
+import { isHostedMode } from "@codetranslate/hosted";
+import { HostedLanding } from "../src/components/landing";
 import { OverviewApp } from "./ui";
 
 export default function Page() {
-  return (
-    <main>
-      <OverviewApp />
-    </main>
-  );
+  if (isHostedMode()) {
+    return <HostedLanding />;
+  }
+  return <OverviewApp />;
 }

@@ -12,6 +12,7 @@ export default tseslint.config(
       "pnpm-lock.yaml",
       "apps/web/.next/**",
       "apps/web/next-env.d.ts",
+      "packages/hosted/prisma/migrations/**",
     ],
   },
   eslint.configs.recommended,

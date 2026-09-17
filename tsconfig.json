@@ -9,15 +9,16 @@
       "@codetranslate/ingest": ["packages/ingest/src/index.ts"],
       "@codetranslate/parser": ["packages/parser/src/index.ts"],
       "@codetranslate/graph": ["packages/graph/src/index.ts"],
-      "@codetranslate/application": ["packages/application/src/index.ts"]
+      "@codetranslate/application": ["packages/application/src/index.ts"],
+      "@codetranslate/hosted": ["packages/hosted/src/index.ts"]
     }
   },
   "include": [
-    "apps/*/src/**/*.ts",
+    "apps/cli/src/**/*.ts",
     "packages/*/src/**/*.ts",
     "packages/*/src/**/*.d.ts",
     "tests/**/*.ts",
     "vitest.config.ts"
   ],
-  "exclude": ["**/dist/**", "**/node_modules/**", "fixtures/**", "apps/web"]
+  "exclude": ["**/dist/**", "**/node_modules/**", "fixtures/**", "apps/web", "apps/web/**"]
 }

@@ -13,12 +13,16 @@ const nextConfig: NextConfig = {
     "@codetranslate/parser",
     "@codetranslate/graph",
     "@codetranslate/shared",
+    "@codetranslate/hosted",
   ],
   serverExternalPackages: [
     "tree-sitter",
     "tree-sitter-javascript",
     "tree-sitter-typescript",
     "node-gyp-build",
+    "@prisma/client",
+    "prisma",
+    "tar",
   ],
   webpack: (config, { isServer }) => {
     if (isServer) {
@@ -28,6 +32,9 @@ const nextConfig: NextConfig = {
         "tree-sitter-javascript",
         "tree-sitter-typescript",
         "node-gyp-build",
+        "@prisma/client",
+        "prisma",
+        "tar",
       );
     }
     return config;

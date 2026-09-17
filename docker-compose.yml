@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: codetranslate
+      POSTGRES_PASSWORD: codetranslate
+      POSTGRES_DB: codetranslate
+    ports:
+      - "5432:5432"
+    volumes:
+      - hosted_pg:/var/lib/postgresql/data
+
+volumes:
+  hosted_pg:

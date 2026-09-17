@@ -9,11 +9,14 @@
     "test": "echo \"tested from workspace root\""
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.10.0",
     "@codetranslate/application": "workspace:*",
     "@codetranslate/core": "workspace:*",
+    "@codetranslate/hosted": "workspace:*",
     "@codetranslate/ingest": "workspace:*",
     "@codetranslate/shared": "workspace:*",
     "next": "^15.1.0",
+    "next-auth": "5.0.0-beta.29",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

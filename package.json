@@ -18,7 +18,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "codetranslate": "tsx apps/cli/src/index.ts",
-    "web": "pnpm --filter @codetranslate/web dev"
+    "web": "pnpm --filter @codetranslate/web dev",
+    "web:hosted": "pnpm --filter @codetranslate/web dev",
+    "db:generate": "pnpm --filter @codetranslate/hosted prisma generate",
+    "db:migrate": "pnpm --filter @codetranslate/hosted prisma migrate deploy",
+    "db:migrate:dev": "pnpm --filter @codetranslate/hosted prisma migrate dev"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

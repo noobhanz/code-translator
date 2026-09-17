@@ -22,9 +22,15 @@ Code Translator is **not a security scanner**.
 
 It does not hunt for leaked secrets beyond excluding obvious sensitive filenames. It does not sandbox third-party tools. It does not prove a repository is safe.
 
+## Hosted mode
+
+When `HOSTED_MODE=true`, Code Translator may fetch a GitHub repository the signed-in user granted, using a read-only token. That source is written to a temporary directory, analyzed with the same static engine, and deleted afterward. File contents are not stored. GitHub tokens are not logged or returned to the browser.
+
+See [docs/hosted.md](docs/hosted.md) and [docs/security.md](docs/security.md).
+
 ## Network and AI
 
-Milestone A does not make network calls for AI, embeddings, or model inference.
+The open-source engine does not make network calls for AI, embeddings, or model inference.
 
 Future AI features, if added, must transmit selected source content only when the user explicitly enables that behavior.
 

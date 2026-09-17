@@ -29,7 +29,10 @@ pnpm codetranslate inspect ./fixtures/next-basic
 - `packages/shared` — primitives
 - `packages/core` — Codebase IR schemas and analysis assembly
 - `packages/ingest` — filesystem snapshotting and classification
+- `packages/application` — human-recognizable application structure
+- `packages/hosted` — GitHub connection and hosted persistence
 - `apps/cli` — CLI
+- `apps/web` — local UI and hosted product
 - `fixtures/` — tiny repositories used by tests
 - `docs/` — architecture and IR notes
 
