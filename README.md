@@ -3,6 +3,7 @@
 Understand what is inside a software repository before asking AI to explain it.
 
 Code Translator is an open-source codebase understanding project.
+It has been vibe coded, to help vibe coders understand what they are actually shipping. 
 
 The project starts with deterministic repository analysis: file discovery,
 classification, manifests, technologies, JavaScript/TypeScript parsing,
