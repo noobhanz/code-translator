@@ -64,11 +64,26 @@ importers:
         specifier: ^3.24.2
         version: 3.25.76
 
+  packages/graph:
+    dependencies:
+      '@codetranslate/core':
+        specifier: workspace:*
+        version: link:../core
+      '@codetranslate/shared':
+        specifier: workspace:*
+        version: link:../shared
+      jsonc-parser:
+        specifier: ^3.3.1
+        version: 3.3.1
+
   packages/ingest:
     dependencies:
       '@codetranslate/core':
         specifier: workspace:*
         version: link:../core
+      '@codetranslate/graph':
+        specifier: workspace:*
+        version: link:../graph
       '@codetranslate/parser':
         specifier: workspace:*
         version: link:../parser
@@ -835,6 +850,9 @@ packages:
 
   json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
+
+  jsonc-parser@3.3.1:
+    resolution: {integrity: sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ==}
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
@@ -1794,6 +1812,8 @@ snapshots:
   json-schema-traverse@0.4.1: {}
 
   json-stable-stringify-without-jsonify@1.0.1: {}
+
+  jsonc-parser@3.3.1: {}
 
   keyv@4.5.4:
     dependencies:

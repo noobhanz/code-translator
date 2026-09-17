@@ -2,6 +2,12 @@ import { FILE_CATEGORY_PRIORITY, type FileNode } from "../schema/files";
 import type { RepositoryStatistics } from "../schema/analysis";
 import type { SourceAnalysisStatistics } from "../schema/source";
 import { symbolKindSchema } from "../schema/source";
+import type {
+  DependencyGraphStatistics,
+  FileImportance,
+  ModuleResolution,
+  RepositoryDependencyGraph,
+} from "../schema/graph";
 
 function increment(counts: Record<string, number>, key: string): void {
   counts[key] = (counts[key] ?? 0) + 1;
@@ -105,5 +111,59 @@ export function computeStatistics(files: readonly FileNode[]): RepositoryStatist
     languageCounts: sortRecord(languageCounts),
     extensionCounts: sortRecord(extensionCounts),
     sourceAnalysis: computeSourceAnalysisStatistics(files),
+    dependencyGraph: emptyDependencyGraphStatistics(),
   };
+}
+
+export function emptyDependencyGraphStatistics(): DependencyGraphStatistics {
+  return {
+    nodeCount: 0,
+    internalFileNodes: 0,
+    externalPackageNodes: 0,
+    builtinNodes: 0,
+    edgeCount: 0,
+    internalEdges: 0,
+    externalEdges: 0,
+    builtinEdges: 0,
+    unresolvedImports: 0,
+  };
+}
+
+export function emptyDependencyGraph(): RepositoryDependencyGraph {
+  return { nodes: [], edges: [] };
+}
+
+export function computeDependencyGraphStatistics(
+  graph: RepositoryDependencyGraph,
+  resolutions: readonly ModuleResolution[],
+): DependencyGraphStatistics {
+  const stats = emptyDependencyGraphStatistics();
+  stats.nodeCount = graph.nodes.length;
+  stats.edgeCount = graph.edges.length;
+  for (const node of graph.nodes) {
+    if (node.type === "file") {
+      stats.internalFileNodes += 1;
+    } else if (node.type === "package") {
+      stats.externalPackageNodes += 1;
+    } else if (node.type === "builtin") {
+      stats.builtinNodes += 1;
+    }
+  }
+  const nodeById = new Map(graph.nodes.map((node) => [node.id, node]));
+  for (const edge of graph.edges) {
+    const target = nodeById.get(edge.to);
+    if (target?.type === "file") {
+      stats.internalEdges += 1;
+    } else if (target?.type === "package") {
+      stats.externalEdges += 1;
+    } else if (target?.type === "builtin") {
+      stats.builtinEdges += 1;
+    }
+  }
+  stats.unresolvedImports = resolutions.filter((item) => item.kind === "unresolved").length;
+  return stats;
+}
+
+export function emptyFileImportance(): FileImportance[] {
+  return [];
 }

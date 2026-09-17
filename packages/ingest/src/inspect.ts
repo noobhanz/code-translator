@@ -1,9 +1,11 @@
 import {
   buildRepositoryAnalysis,
   DEFAULT_SCAN_OPTIONS,
+  snapshotFileToNode,
   type RepositoryAnalysis,
   type ScanOptions,
 } from "@codetranslate/core";
+import { analyzeDependencies } from "@codetranslate/graph";
 import { analyzeSnapshotSources } from "@codetranslate/parser";
 import type { Logger } from "@codetranslate/shared";
 import { LocalRepositorySource } from "./local/source";
@@ -39,6 +41,16 @@ export async function inspectRepository(
     logger,
   );
 
+  const fileNodes = snapshot.files.map((file) =>
+    snapshotFileToNode(snapshot.metadata.id, file, parsedSources.analyses.get(file.path)),
+  );
+  const dependencies = await analyzeDependencies({
+    repositoryId: snapshot.metadata.id,
+    files: fileNodes,
+    manifests: parsedManifests.manifests,
+    readText: (relativePath) => snapshot.readText(relativePath),
+  });
+
   const analysis = buildRepositoryAnalysis({
     snapshot,
     manifests: parsedManifests.manifests,
@@ -47,9 +59,13 @@ export async function inspectRepository(
       ...parsedManifests.diagnostics,
       ...packageManager.diagnostics,
       ...parsedSources.diagnostics,
+      ...dependencies.diagnostics,
     ],
     packageManager: packageManager.packageManager,
     fileAnalyses: parsedSources.analyses,
+    resolutions: dependencies.resolutions,
+    graph: dependencies.graph,
+    fileImportance: dependencies.fileImportance,
   });
 
   return {

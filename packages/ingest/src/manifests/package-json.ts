@@ -96,6 +96,11 @@ export async function parsePackageManifest(
     manifest.packageManager = json.packageManager;
   }
 
+  const workspaces = readWorkspaces(json.workspaces);
+  if (workspaces && workspaces.length > 0) {
+    manifest.workspaces = workspaces;
+  }
+
   if (json.engines !== undefined) {
     const engines = z.record(z.string(), z.string()).safeParse(json.engines);
     if (engines.success) {
@@ -141,4 +146,15 @@ function readStringKeys(
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function readWorkspaces(value: unknown): string[] | undefined {
+  if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
+    return [...value].sort((a, b) => a.localeCompare(b));
+  }
+  if (isPlainObject(value) && Array.isArray(value.packages)) {
+    const packages = value.packages.filter((item): item is string => typeof item === "string");
+    return packages.sort((a, b) => a.localeCompare(b));
+  }
+  return undefined;
 }

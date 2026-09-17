@@ -63,6 +63,14 @@ export function printInspectSummary(
     logger.info(`  ${padLabel("Syntax warnings")} ${source.filesWithSyntaxErrors}`);
   }
 
+  const deps = stats.dependencyGraph;
+  logger.info("");
+  logger.info("Dependency analysis:");
+  logger.info(`  ${padLabel("Internal deps")} ${deps.internalEdges}`);
+  logger.info(`  ${padLabel("External deps")} ${deps.externalEdges}`);
+  logger.info(`  ${padLabel("Built-in deps")} ${deps.builtinEdges}`);
+  logger.info(`  ${padLabel("Unresolved")} ${deps.unresolvedImports}`);
+
   logger.info("");
   logger.info("Package manager:");
   logger.info(`  ${analysis.packageManager ?? "unknown"}`);

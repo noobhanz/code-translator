@@ -1,6 +1,6 @@
 # Codebase IR
 
-Schema version: **`0.2`**
+Schema version: **`0.3`**
 
 The Codebase IR is the versioned JSON document written to `.codetranslate/repository.json`. Zod schemas in `@codetranslate/core` are the runtime source of truth.
 
@@ -12,7 +12,7 @@ Top-level document.
 
 | Field                  | Meaning                                           |
 | ---------------------- | ------------------------------------------------- |
-| `schemaVersion`        | `"0.2"`                                           |
+| `schemaVersion`        | `"0.3"`                                           |
 | `repository`           | Identity and source metadata                      |
 | `files`                | Sorted `FileNode` list (POSIX relative paths)     |
 | `manifests`            | Parsed or detected project manifests              |
@@ -20,8 +20,11 @@ Top-level document.
 | `diagnostics`          | Non-fatal issues                                  |
 | `statistics`           | Deterministic counts                              |
 | `packageManager`       | Optional best-effort package manager name         |
+| `resolutions`          | One record per import/re-export specifier         |
+| `graph`                | File/package/builtin nodes and dependency edges   |
+| `fileImportance`       | Structural scores, highest first                  |
 
-Milestone B adds optional `FileNode.analysis` (symbols, imports, exports). It does not include raw ASTs, graph edges, routes, or AI explanations.
+Milestone C adds module resolution and a static dependency graph. It does not include call graphs, routes, or AI explanations.
 
 ## RepositoryMetadata
 
@@ -33,7 +36,7 @@ Milestone B adds optional `FileNode.analysis` (symbols, imports, exports). It do
 | `source.path`     | Path supplied to the CLI                                                    |
 | `rootPath`        | Resolved absolute POSIX path                                                |
 | `analyzedAt`      | ISO-8601 timestamp (varies by run)                                          |
-| `analyzerVersion` | Tool version, currently `0.2.0`                                             |
+| `analyzerVersion` | Tool version, currently `0.3.0`                                             |
 
 ## FileNode
 
@@ -110,7 +113,40 @@ Tree-sitter uses 0-based rows/columns internally. The IR converts at the parser 
 | `names`    | Exported names (`*` for export-all)                 |
 | `source`   | Literal re-export module specifier if present       |
 
-Re-export targets are not resolved.
+Re-export module specifiers are resolved in Milestone C. Symbol names inside those modules are not linked.
+
+## ModuleResolution
+
+| Field                | Meaning                                                                                     |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| `id`                 | Deterministic `resolution_` hash of repo, importer, specifier, location                     |
+| `importerFileId`     | Importing file                                                                              |
+| `specifier`          | Literal module specifier                                                                    |
+| `kind`               | `internal` \| `external` \| `builtin` \| `unresolved`                                       |
+| `targetFileId`       | Internal file when resolved                                                                 |
+| `packageName`        | Canonical npm name or `node:fs`-style builtin                                               |
+| `resolutionStrategy` | `relative` \| `alias` \| `workspace` \| `package` \| `builtin` \| `baseUrl` \| `unresolved` |
+| `confidence`         | 0–1                                                                                         |
+| `candidates`         | Paths considered                                                                            |
+| `evidence`           | Why this resolution was chosen                                                              |
+| `sourceImportId`     | Originating import when applicable                                                          |
+| `sourceExportId`     | Originating re-export when applicable                                                       |
+
+Evidence `type` values: `exact-path`, `extension-probe`, `index-file`, `tsconfig-path`, `package-manifest`, `node-builtin`, `workspace-package`.
+
+## GraphNode / GraphEdge
+
+Graph node `type`: `file` \| `package` \| `builtin`.
+
+File nodes reuse file IDs. Package nodes use `package:<name>`. Builtin nodes use `builtin:<canonical>`.
+
+Edge `type`: `imports` \| `requires` \| `dynamic-imports` \| `re-exports`.
+
+Each import declaration keeps its own edge (`sourceImportId`) so provenance is stable. Summaries may collapse labels.
+
+## FileImportance
+
+`score` is documented in `docs/architecture.md`. `reasons` lists the raw incoming/outgoing/export/symbol counts.
 
 ## ManifestSummary
 
@@ -134,6 +170,8 @@ Counts of discovered / included / ignored files, binary files, bytes, and maps o
 
 `statistics.sourceAnalysis` counts parsed files, symbols, imports, exports, syntax-error files, parse failures, and `symbolKindCounts`.
 
+`statistics.dependencyGraph` counts graph nodes/edges by kind and unresolved imports.
+
 ## Diagnostic
 
 ```text
@@ -143,6 +181,8 @@ message: string
 path?: string
 ```
 
-Codes include Milestone A issues plus `SOURCE_PARSE_FAILED`, `SOURCE_SYNTAX_ERROR`, `UNSUPPORTED_PARSER_LANGUAGE`, `SOURCE_READ_FAILED`, and `SOURCE_TOO_LARGE_FOR_PARSER`.
+Codes include prior issues plus `SOURCE_PARSE_FAILED`, `SOURCE_SYNTAX_ERROR`, `UNSUPPORTED_PARSER_LANGUAGE`, `SOURCE_READ_FAILED`, `SOURCE_TOO_LARGE_FOR_PARSER`, `IMPORT_UNRESOLVED`, `IMPORT_RESOLUTION_AMBIGUOUS`, `TSCONFIG_PARSE_FAILED`, `TSCONFIG_PATH_INVALID`, and `WORKSPACE_MANIFEST_PARSE_FAILED`.
+
+Bare package imports are **external**, not unresolved, even when `node_modules` is absent.
 
 `UNSUPPORTED_PARSER_LANGUAGE` is not emitted for ordinary CSS/Markdown/image files.

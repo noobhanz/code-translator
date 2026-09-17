@@ -13,7 +13,7 @@ describe("inspect fixtures/next-basic", () => {
   it("produces a stable, relative, package-metadata-aware analysis", async () => {
     const { analysis } = await inspectRepository(fixture);
 
-    expect(analysis.schemaVersion).toBe("0.2");
+    expect(analysis.schemaVersion).toBe("0.3");
     expect(analysis.repository.name).toBe("next-basic");
     expect(analysis.repository.id.startsWith("repo_")).toBe(true);
 
@@ -57,6 +57,17 @@ describe("inspect fixtures/next-basic", () => {
     );
     expect(json).not.toContain("treeSitter");
     expect(json).not.toContain("nodeType");
+
+    const page = analysis.files.find((file) => file.path === "app/page.tsx");
+    expect(page && welcome).toBeTruthy();
+    expect(
+      analysis.graph.edges.some(
+        (edge) => edge.from === page?.id && edge.to === welcome?.id && edge.type === "imports",
+      ),
+    ).toBe(true);
+    expect(
+      analysis.resolutions.some((item) => item.kind === "external" && item.packageName === "react"),
+    ).toBe(true);
   });
 
   it("marks binary fixture files as binary", async () => {

@@ -68,7 +68,7 @@ describe("parser size limit", () => {
         source: { type: "local", path: "." },
         rootPath: "/tmp",
         analyzedAt: "2026-01-01T00:00:00.000Z",
-        analyzerVersion: "0.2.0",
+        analyzerVersion: "0.3.0",
       },
       files: [file],
       diagnostics: [],

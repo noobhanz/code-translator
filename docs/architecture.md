@@ -1,8 +1,12 @@
 # Architecture
 
-Code Translator is a small TypeScript monorepo. Milestone A discovers and classifies files. Milestone B parses JavaScript/TypeScript with Tree-sitter and extracts language-neutral symbols, imports, and exports.
+Code Translator is a small TypeScript monorepo.
 
-It does not build graphs, resolve imports, call models, or ship a UI.
+- Milestone A discovers and classifies files.
+- Milestone B parses JavaScript/TypeScript with Tree-sitter.
+- Milestone C resolves module specifiers and builds a static dependency graph.
+
+It does not call models, detect routes, or ship a UI.
 
 ## Pipeline
 
@@ -11,22 +15,20 @@ LocalRepositorySource
         ↓
 RepositorySnapshot
         ↓
-RepositoryAnalyzer
-        │
-        ├── manifest analysis
-        │
-        └── parser registry
-                ↓
-          LanguageAnalyzer
-                ↓
-           FileAnalysis
+Parser
+        ↓
+FileAnalysis
+        ↓
+ModuleResolver
+        ↓
+DependencyGraphBuilder
         ↓
 RepositoryAnalysis
         ↓
 CLI / JSON
 ```
 
-The scanner never walks the filesystem during parsing. Parsers consume `SnapshotFile` records already discovered by ingest.
+The graph package never walks the filesystem and never reparses source. It consumes file records, `FileAnalysis` imports/exports, and config/manifest data.
 
 ## Packages
 
@@ -36,38 +38,51 @@ The scanner never walks the filesystem during parsing. Parsers consume `Snapshot
 | `@codetranslate/core`   | Zod schemas, diagnostics, snapshot types, analysis assembly, JSON I/O |
 | `@codetranslate/ingest` | Local source, ignore rules, classification, hashing, manifest parsing |
 | `@codetranslate/parser` | Tree-sitter registry, JS/TS/JSX/TSX analyzers, symbol extraction      |
-| `@codetranslate/cli`    | `codetranslate inspect` and `codetranslate symbols`                   |
+| `@codetranslate/graph`  | Module resolution, dependency graph, structural importance            |
+| `@codetranslate/cli`    | `inspect`, `symbols`, `dependencies`, `graph`                         |
 
-Ingest remains responsible for filesystem, ignores, hashes, binary detection, and classification.
-
-The parser is responsible for syntax trees, symbols, imports, exports, source ranges, and parse diagnostics. Tree-sitter nodes are internal and never serialized.
-
-## Parser selection
-
-A small in-process registry maps file extensions to analyzers:
-
-- `.js` / `.mjs` / `.cjs` → JavaScript
-- `.jsx` → JSX
-- `.ts` → TypeScript
-- `.tsx` → TSX
-
-Unsupported languages stay in the IR without `analysis`. Binary, ignored, vendor, generated, asset, and documentation files are not parsed.
-
-`next.config.ts` may be parsed as TypeScript source. It is never executed.
-
-## Classification precedence
-
-When multiple categories match:
+Ownership:
 
 ```text
-test > config > documentation > generated > vendor > source > asset > unknown
+ingest  → filesystem facts
+parser  → syntax facts
+graph   → cross-file/module relationships
+core    → schemas and analysis assembly
 ```
+
+## Module resolution
+
+The graph is a **source graph**: statically declared module dependencies. It is not a runtime, call, or data-flow graph.
+
+Precedence:
+
+1. Relative specifiers (`./`, `../`)
+2. `tsconfig.json` / `jsconfig.json` `paths` aliases
+3. Node.js builtins (`fs`, `node:fs`, …)
+4. Workspace package names
+5. `baseUrl` internal files, only when the specifier is not a known package.json dependency
+6. Bare specifiers → external packages (even without `node_modules`)
+7. Unresolved (failed relative/alias lookups)
+
+Extension probe order:
+
+```text
+.ts .tsx .js .jsx .mts .cts .mjs .cjs
+```
+
+Then `index` files with the same order. Specifiers with an explicit extension use that path first and do not remap `.js` → `.ts`.
+
+Builtin names are stored as `node:fs` even when the source wrote `fs`.
+
+## Structural importance
+
+`fileImportance.score` is a normalized mix of unique incoming neighbors (0.60), unique outgoing neighbors (0.15), export count (0.15), and symbol count (0.10). It is graph centrality, not business or architectural importance.
 
 ## Future boundaries (not implemented)
 
 ```text
-graphs           import resolution, dependency / call graphs
-detectors        framework routes, env usage, Prisma
+detectors        framework routes, entrypoints, layouts
+call graphs      symbol references, function calls
 AI               explanations, chat, embeddings
 web UI           browser app, OAuth, uploads
 ```

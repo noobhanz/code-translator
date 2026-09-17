@@ -4,9 +4,15 @@ import { repositoryAnalysisSchema } from "../schema/analysis";
 import type { BasicTechnologyDetection, ManifestSummary } from "../schema/manifests";
 import type { Diagnostic } from "../schema/diagnostics";
 import type { FileAnalysis } from "../schema/source";
+import type { FileImportance, ModuleResolution, RepositoryDependencyGraph } from "../schema/graph";
 import type { RepositorySnapshot } from "../types/snapshot";
 import { snapshotFileToNode, sortFileNodes } from "./file-nodes";
-import { computeStatistics } from "./statistics";
+import {
+  computeDependencyGraphStatistics,
+  computeStatistics,
+  emptyDependencyGraph,
+  emptyFileImportance,
+} from "./statistics";
 
 export interface AnalyzeSnapshotInput {
   snapshot: RepositorySnapshot;
@@ -15,6 +21,9 @@ export interface AnalyzeSnapshotInput {
   extraDiagnostics?: Diagnostic[];
   packageManager?: string;
   fileAnalyses?: ReadonlyMap<string, FileAnalysis>;
+  resolutions?: ModuleResolution[];
+  graph?: RepositoryDependencyGraph;
+  fileImportance?: FileImportance[];
 }
 
 export function buildRepositoryAnalysis(input: AnalyzeSnapshotInput): RepositoryAnalysis {
@@ -25,6 +34,11 @@ export function buildRepositoryAnalysis(input: AnalyzeSnapshotInput): Repository
   );
 
   const diagnostics = [...input.snapshot.diagnostics, ...(input.extraDiagnostics ?? [])];
+  const resolutions = input.resolutions ?? [];
+  const graph = input.graph ?? emptyDependencyGraph();
+  const fileImportance = input.fileImportance ?? emptyFileImportance();
+  const statistics = computeStatistics(files);
+  statistics.dependencyGraph = computeDependencyGraphStatistics(graph, resolutions);
 
   const analysis: RepositoryAnalysis = {
     schemaVersion: SCHEMA_VERSION,
@@ -33,7 +47,10 @@ export function buildRepositoryAnalysis(input: AnalyzeSnapshotInput): Repository
     manifests: input.manifests,
     detectedTechnologies: input.detectedTechnologies,
     diagnostics,
-    statistics: computeStatistics(files),
+    statistics,
+    resolutions,
+    graph,
+    fileImportance,
   };
 
   if (input.packageManager) {

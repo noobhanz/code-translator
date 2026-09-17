@@ -7,7 +7,8 @@
       "@codetranslate/shared": ["packages/shared/src/index.ts"],
       "@codetranslate/core": ["packages/core/src/index.ts"],
       "@codetranslate/ingest": ["packages/ingest/src/index.ts"],
-      "@codetranslate/parser": ["packages/parser/src/index.ts"]
+      "@codetranslate/parser": ["packages/parser/src/index.ts"],
+      "@codetranslate/graph": ["packages/graph/src/index.ts"]
     }
   },
   "include": [

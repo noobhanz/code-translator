@@ -63,6 +63,9 @@ describe("JSON serialization", () => {
       manifests: [],
       detectedTechnologies: [],
       diagnostics: [],
+      resolutions: [],
+      graph: { nodes: [], edges: [] },
+      fileImportance: [],
       statistics: computeStatistics([
         file({
           id: "file_1",
@@ -79,7 +82,7 @@ describe("JSON serialization", () => {
     expect(json.endsWith("\n")).toBe(true);
 
     const parsed = parseAnalysisJson(json);
-    expect(parsed.schemaVersion).toBe("0.2");
+    expect(parsed.schemaVersion).toBe("0.3");
     expect(parsed.statistics.sourceAnalysis.symbolCount).toBe(0);
     expect(parsed.files[0]?.path).toBe("src/index.ts");
   });

@@ -1,5 +1,7 @@
 import { Command } from "commander";
 import { ANALYZER_VERSION } from "@codetranslate/shared";
+import { runDependenciesCommand } from "./commands/dependencies";
+import { runGraphCommand } from "./commands/graph";
 import { runInspectCommand, type InspectCommandOptions } from "./commands/inspect";
 import { runSymbolsCommand } from "./commands/symbols";
 
@@ -21,6 +23,8 @@ Examples:
   $ codetranslate inspect ./fixtures/next-basic --json
   $ codetranslate inspect ./fixtures/next-basic --debug
   $ codetranslate symbols ./fixtures/next-basic
+  $ codetranslate dependencies ./fixtures/next-basic
+  $ codetranslate graph ./fixtures/next-basic
 `,
   );
 
@@ -49,6 +53,34 @@ program
   .action(async (inputPath: string, commandOptions: InspectCommandOptions, command: Command) => {
     const globalOptions = command.parent?.opts<InspectCommandOptions>() ?? {};
     await runSymbolsCommand(inputPath, {
+      debug: Boolean(commandOptions.debug || globalOptions.debug),
+      json: Boolean(commandOptions.json || globalOptions.json),
+    });
+  });
+
+program
+  .command("dependencies")
+  .description("List resolved module dependencies")
+  .argument("<path>", "Path to a local repository directory")
+  .option("--debug", "Enable debug logging", false)
+  .option("--json", "Write machine-readable JSON to stdout", false)
+  .action(async (inputPath: string, commandOptions: InspectCommandOptions, command: Command) => {
+    const globalOptions = command.parent?.opts<InspectCommandOptions>() ?? {};
+    await runDependenciesCommand(inputPath, {
+      debug: Boolean(commandOptions.debug || globalOptions.debug),
+      json: Boolean(commandOptions.json || globalOptions.json),
+    });
+  });
+
+program
+  .command("graph")
+  .description("Summarize the repository dependency graph")
+  .argument("<path>", "Path to a local repository directory")
+  .option("--debug", "Enable debug logging", false)
+  .option("--json", "Write machine-readable JSON to stdout", false)
+  .action(async (inputPath: string, commandOptions: InspectCommandOptions, command: Command) => {
+    const globalOptions = command.parent?.opts<InspectCommandOptions>() ?? {};
+    await runGraphCommand(inputPath, {
       debug: Boolean(commandOptions.debug || globalOptions.debug),
       json: Boolean(commandOptions.json || globalOptions.json),
     });

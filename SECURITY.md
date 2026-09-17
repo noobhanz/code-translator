@@ -9,7 +9,7 @@ Analysis is static. Milestone A inspects the filesystem. Milestone B parses Java
 1. Repositories are treated as untrusted.
 2. Repository code is never executed during normal analysis.
 3. Lifecycle scripts are never run. The scanner does not invoke `npm install`, `pnpm install`, `yarn`, `npm run`, `pnpm run`, `node`, `npx`, `pip`, `python`, `cargo`, `make`, or repository shell scripts.
-4. JavaScript/TypeScript configuration files such as `next.config.ts` may be parsed as text. They are never evaluated, imported, or run through `ts-node` / Babel / ESLint.
+4. JavaScript/TypeScript configuration files such as `next.config.ts` may be parsed as text. They are never evaluated, imported, or run through `ts-node` / Babel / ESLint. `tsconfig.json`, `jsconfig.json`, `package.json`, and `pnpm-workspace.yaml` are read as data (JSON/JSONC/YAML text) only.
 5. The parser does not `eval`, `new Function`, `import()`, or `require()` repository source. `import`/`require` in analyzed files are syntax only.
 6. Only Code Translator's own Tree-sitter grammars are used. Repository-installed grammars are ignored.
 7. Sensitive files such as `.env`, `*.pem`, `*.key`, `id_rsa`, and `credentials.json` are skipped. Their contents are not read, hashed, printed, or written to `repository.json`.

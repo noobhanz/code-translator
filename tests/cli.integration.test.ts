@@ -36,6 +36,8 @@ describe("CLI", () => {
     expect(result.stdout).toContain("Code Translator");
     expect(result.stdout).toContain("inspect");
     expect(result.stdout).toContain("symbols");
+    expect(result.stdout).toContain("dependencies");
+    expect(result.stdout).toContain("graph");
     expect(result.stdout).toContain("--debug");
     expect(result.stdout).toContain("--json");
     expect(result.stdout).toContain("--output");

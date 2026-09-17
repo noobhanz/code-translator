@@ -12,6 +12,7 @@ export const packageManifestSchema = z.object({
   devDependencies: z.array(z.string()),
   peerDependencies: z.array(z.string()),
   engines: z.record(z.string(), z.string()).optional(),
+  workspaces: z.array(z.string()).optional(),
 });
 
 export const genericManifestTypeSchema = z.enum([

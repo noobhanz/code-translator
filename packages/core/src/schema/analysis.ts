@@ -4,6 +4,12 @@ import { diagnosticSchema } from "./diagnostics";
 import { fileNodeSchema } from "./files";
 import { basicTechnologyDetectionSchema, manifestSummarySchema } from "./manifests";
 import { sourceAnalysisStatisticsSchema } from "./source";
+import {
+  dependencyGraphStatisticsSchema,
+  fileImportanceSchema,
+  moduleResolutionSchema,
+  repositoryDependencyGraphSchema,
+} from "./graph";
 
 export const schemaVersionSchema = z.literal(SCHEMA_VERSION);
 
@@ -32,6 +38,7 @@ export const repositoryStatisticsSchema = z.object({
   languageCounts: z.record(z.string(), z.number().int().nonnegative()),
   extensionCounts: z.record(z.string(), z.number().int().nonnegative()),
   sourceAnalysis: sourceAnalysisStatisticsSchema,
+  dependencyGraph: dependencyGraphStatisticsSchema,
 });
 
 export const repositoryAnalysisSchema = z.object({
@@ -43,6 +50,9 @@ export const repositoryAnalysisSchema = z.object({
   diagnostics: z.array(diagnosticSchema),
   statistics: repositoryStatisticsSchema,
   packageManager: z.string().optional(),
+  resolutions: z.array(moduleResolutionSchema),
+  graph: repositoryDependencyGraphSchema,
+  fileImportance: z.array(fileImportanceSchema),
 });
 
 export type RepositoryMetadata = z.infer<typeof repositoryMetadataSchema>;

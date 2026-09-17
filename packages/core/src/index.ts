@@ -45,10 +45,34 @@ export { buildRepositoryAnalysis, type AnalyzeSnapshotInput } from "./pipeline/a
 export { snapshotFileToNode, sortFileNodes } from "./pipeline/file-nodes";
 export { parseAnalysisJson, serializeAnalysis } from "./pipeline/serialize";
 export {
+  computeDependencyGraphStatistics,
   computeSourceAnalysisStatistics,
   computeStatistics,
+  emptyDependencyGraph,
+  emptyDependencyGraphStatistics,
+  emptyFileImportance,
   emptySourceAnalysisStatistics,
 } from "./pipeline/statistics";
+export {
+  dependencyGraphStatisticsSchema,
+  fileImportanceSchema,
+  graphEdgeSchema,
+  graphNodeSchema,
+  moduleResolutionSchema,
+  repositoryDependencyGraphSchema,
+  resolutionEvidenceSchema,
+  type DependencyGraphStatistics,
+  type FileImportance,
+  type GraphEdge,
+  type GraphEdgeType,
+  type GraphNode,
+  type GraphNodeType,
+  type ModuleResolution,
+  type ModuleResolutionKind,
+  type RepositoryDependencyGraph,
+  type ResolutionEvidence,
+  type ResolutionStrategy,
+} from "./schema/graph";
 export {
   exportDeclarationSchema,
   exportTypeSchema,
