@@ -1,6 +1,6 @@
-export const SCHEMA_VERSION = "0.3" as const;
+export const SCHEMA_VERSION = "0.4" as const;
 
-export const ANALYZER_VERSION = "0.3.0";
+export const ANALYZER_VERSION = "0.4.0";
 
 export const OUTPUT_DIR_NAME = ".codetranslate";
 

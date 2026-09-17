@@ -5,6 +5,7 @@ import type { BasicTechnologyDetection, ManifestSummary } from "../schema/manife
 import type { Diagnostic } from "../schema/diagnostics";
 import type { FileAnalysis } from "../schema/source";
 import type { FileImportance, ModuleResolution, RepositoryDependencyGraph } from "../schema/graph";
+import type { ApplicationModel } from "../schema/application";
 import type { RepositorySnapshot } from "../types/snapshot";
 import { snapshotFileToNode, sortFileNodes } from "./file-nodes";
 import {
@@ -24,6 +25,7 @@ export interface AnalyzeSnapshotInput {
   resolutions?: ModuleResolution[];
   graph?: RepositoryDependencyGraph;
   fileImportance?: FileImportance[];
+  application?: ApplicationModel;
 }
 
 export function buildRepositoryAnalysis(input: AnalyzeSnapshotInput): RepositoryAnalysis {
@@ -52,6 +54,10 @@ export function buildRepositoryAnalysis(input: AnalyzeSnapshotInput): Repository
     graph,
     fileImportance,
   };
+
+  if (input.application) {
+    analysis.application = input.application;
+  }
 
   if (input.packageManager) {
     analysis.packageManager = input.packageManager;

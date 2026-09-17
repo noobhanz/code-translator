@@ -5,49 +5,55 @@ Code Translator is a small TypeScript monorepo.
 - Milestone A discovers and classifies files.
 - Milestone B parses JavaScript/TypeScript with Tree-sitter.
 - Milestone C resolves module specifiers and builds a static dependency graph.
+- Milestone D detects application structure and presents it in `understand` and a small web UI.
 
-It does not call models, detect routes, or ship a UI.
+It does not call models or execute repository code.
 
 ## Pipeline
 
 ```text
-LocalRepositorySource
+Repository
         ↓
-RepositorySnapshot
+Filesystem analysis
         ↓
-Parser
+Source parsing
         ↓
-FileAnalysis
+Symbols / imports / exports
         ↓
-ModuleResolver
+Module resolution
         ↓
-DependencyGraphBuilder
+Dependency graph
         ↓
-RepositoryAnalysis
+Application detection
         ↓
-CLI / JSON
+ApplicationModel
+        ↓
+Understand CLI / Web UI
 ```
 
 The graph package never walks the filesystem and never reparses source. It consumes file records, `FileAnalysis` imports/exports, and config/manifest data.
 
 ## Packages
 
-| Package                 | Role                                                                  |
-| ----------------------- | --------------------------------------------------------------------- |
-| `@codetranslate/shared` | Path normalization, SHA-256, IDs, logger, scan constants              |
-| `@codetranslate/core`   | Zod schemas, diagnostics, snapshot types, analysis assembly, JSON I/O |
-| `@codetranslate/ingest` | Local source, ignore rules, classification, hashing, manifest parsing |
-| `@codetranslate/parser` | Tree-sitter registry, JS/TS/JSX/TSX analyzers, symbol extraction      |
-| `@codetranslate/graph`  | Module resolution, dependency graph, structural importance            |
-| `@codetranslate/cli`    | `inspect`, `symbols`, `dependencies`, `graph`                         |
+| Package                      | Role                                                                  |
+| ---------------------------- | --------------------------------------------------------------------- |
+| `@codetranslate/shared`      | Path normalization, SHA-256, IDs, logger, scan constants              |
+| `@codetranslate/core`        | Zod schemas, diagnostics, snapshot types, analysis assembly, JSON I/O |
+| `@codetranslate/ingest`      | Local source, ignore rules, classification, hashing, manifest parsing |
+| `@codetranslate/parser`      | Tree-sitter registry, JS/TS/JSX/TSX analyzers, symbol extraction      |
+| `@codetranslate/graph`       | Module resolution, dependency graph, structural importance            |
+| `@codetranslate/application` | Framework, page, area, and service detection for humans               |
+| `@codetranslate/cli`         | `understand`, `inspect`, `symbols`, `dependencies`, `graph`           |
+| `@codetranslate/web`         | Local development UI for application overviews                        |
 
 Ownership:
 
 ```text
-ingest  → filesystem facts
-parser  → syntax facts
-graph   → cross-file/module relationships
-core    → schemas and analysis assembly
+ingest       → filesystem facts
+parser       → syntax facts
+graph        → cross-file/module relationships
+application  → human-recognizable application structure
+core         → schemas and analysis assembly
 ```
 
 ## Module resolution
@@ -73,6 +79,20 @@ Extension probe order:
 Then `index` files with the same order. Specifiers with an explicit extension use that path first and do not remap `.js` → `.ts`.
 
 Builtin names are stored as `node:fs` even when the source wrote `fs`.
+
+## Application detection
+
+Detectors consume `RepositoryAnalysis` only. They do not walk the filesystem or parse source.
+
+Human-facing confidence:
+
+```text
+>= 0.85 high
+>= 0.60 medium
+< 0.60 low
+```
+
+`understand` and the web UI hide detections below 0.55.
 
 ## Structural importance
 

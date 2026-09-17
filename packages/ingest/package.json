@@ -1,6 +1,6 @@
 {
   "name": "@codetranslate/ingest",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
@@ -17,6 +17,7 @@
     "test": "echo \"tested from workspace root\""
   },
   "dependencies": {
+    "@codetranslate/application": "workspace:*",
     "@codetranslate/core": "workspace:*",
     "@codetranslate/graph": "workspace:*",
     "@codetranslate/parser": "workspace:*",

@@ -1,6 +1,6 @@
 # Codebase IR
 
-Schema version: **`0.3`**
+Schema version: **`0.4`**
 
 The Codebase IR is the versioned JSON document written to `.codetranslate/repository.json`. Zod schemas in `@codetranslate/core` are the runtime source of truth.
 
@@ -12,7 +12,7 @@ Top-level document.
 
 | Field                  | Meaning                                           |
 | ---------------------- | ------------------------------------------------- |
-| `schemaVersion`        | `"0.3"`                                           |
+| `schemaVersion`        | `"0.4"`                                           |
 | `repository`           | Identity and source metadata                      |
 | `files`                | Sorted `FileNode` list (POSIX relative paths)     |
 | `manifests`            | Parsed or detected project manifests              |
@@ -23,8 +23,9 @@ Top-level document.
 | `resolutions`          | One record per import/re-export specifier         |
 | `graph`                | File/package/builtin nodes and dependency edges   |
 | `fileImportance`       | Structural scores, highest first                  |
+| `application`          | Optional human-facing application model           |
 
-Milestone C adds module resolution and a static dependency graph. It does not include call graphs, routes, or AI explanations.
+Milestone D adds `application`. It does not include AI prose, call graphs, or runtime traces.
 
 ## RepositoryMetadata
 
@@ -36,7 +37,7 @@ Milestone C adds module resolution and a static dependency graph. It does not in
 | `source.path`     | Path supplied to the CLI                                                    |
 | `rootPath`        | Resolved absolute POSIX path                                                |
 | `analyzedAt`      | ISO-8601 timestamp (varies by run)                                          |
-| `analyzerVersion` | Tool version, currently `0.3.0`                                             |
+| `analyzerVersion` | Tool version, currently `0.4.0`                                             |
 
 ## FileNode
 
@@ -186,3 +187,23 @@ Codes include prior issues plus `SOURCE_PARSE_FAILED`, `SOURCE_SYNTAX_ERROR`, `U
 Bare package imports are **external**, not unresolved, even when `node_modules` is absent.
 
 `UNSUPPORTED_PARSER_LANGUAGE` is not emitted for ordinary CSS/Markdown/image files.
+
+## ApplicationModel
+
+Human-facing application structure derived from files, symbols, packages, and the graph.
+
+Includes:
+
+- `summary` — `primaryType`, optional `primaryFramework`, `headline`, page/API counts
+- `frameworks` — Next.js, React, Vite, Express
+- `entrypoints`
+- `surfaces` — pages, API endpoints, layouts, middleware
+- `areas` — Accounts, Payments, AI, Data, Files, and others
+- `capabilities`
+- `externalServices`
+- `dataStores`
+- `relationships`
+- `flows`
+- `diagnostics`
+
+Every detection has `evidence`. `basis` is `observed` or `inferred`. Confidence is 0–1 (`>= 0.85` high, `>= 0.60` medium, otherwise low). `understand` hides items below `0.55`.

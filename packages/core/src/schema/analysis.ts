@@ -10,6 +10,7 @@ import {
   moduleResolutionSchema,
   repositoryDependencyGraphSchema,
 } from "./graph";
+import { applicationModelSchema } from "./application";
 
 export const schemaVersionSchema = z.literal(SCHEMA_VERSION);
 
@@ -53,6 +54,7 @@ export const repositoryAnalysisSchema = z.object({
   resolutions: z.array(moduleResolutionSchema),
   graph: repositoryDependencyGraphSchema,
   fileImportance: z.array(fileImportanceSchema),
+  application: applicationModelSchema.optional(),
 });
 
 export type RepositoryMetadata = z.infer<typeof repositoryMetadataSchema>;

@@ -1,21 +1,20 @@
 # Code Translator
 
-Understand what is inside a software repository before asking AI to explain it.
+Understand the software you built.
 
-Code Translator is an open-source codebase understanding project.
-It has been vibe coded, to help vibe coders understand what they are actually shipping. 
+Code Translator analyzes a software project and turns its structure into
+a simple overview of what the application contains and how the main parts
+fit together.
 
-The project starts with deterministic repository analysis: file discovery,
-classification, manifests, JavaScript/TypeScript parsing, module resolution,
-and a file dependency graph.
+Analysis happens locally using static code analysis.
 
-AI explanation comes later.
+It has been vibe coded, to help vibe coders understand what they are actually shipping.
 
 ## Why
 
 Most “explain this repo” tools jump straight to a model. That skips the boring work that actually makes explanations trustworthy: what files exist, which ones are source, which package manager is in play, and what the manifests claim is installed.
 
-Milestone A is the scanner foundation. Milestone B parses JavaScript and TypeScript. Milestone C resolves modules and builds a static dependency graph. The tool never executes repository code.
+Milestone A is the scanner. Milestone B parses JavaScript and TypeScript. Milestone C builds a dependency graph. Milestone D turns that into an application overview. The tool never executes repository code.
 
 ## Current capabilities
 
@@ -35,10 +34,12 @@ Milestone A is the scanner foundation. Milestone B parses JavaScript and TypeScr
 - Resolve relative, alias, builtin, workspace, and package specifiers
 - Build a file-to-file and file-to-package dependency graph
 - Rank files by simple structural importance
+- Detect Next.js, React, Vite, and Express structure
+- Identify pages, API routes, and application areas such as Accounts, Payments, AI, and Data
 - Write `.codetranslate/repository.json`
-- Print a human summary, list symbols/dependencies, or emit `--json` for scripts
+- Explain a project with `understand`, or inspect symbols/dependencies as a developer
 
-Not yet implemented: TypeScript semantic checking, call graphs, framework route detection, runtime tracing, AI, or a web UI.
+Not yet implemented: TypeScript semantic checking, call graphs, runtime tracing, or AI-written explanations.
 
 ## Installation
 
@@ -62,6 +63,13 @@ pnpm codetranslate inspect ./fixtures/next-basic
 ```
 
 ## CLI usage
+
+```bash
+pnpm codetranslate understand ./my-project
+pnpm web
+```
+
+Developer commands:
 
 ```bash
 pnpm codetranslate --help
@@ -145,10 +153,10 @@ Exact counts depend on the repository. Technology lines mean “listed in packag
 See [docs/architecture.md](docs/architecture.md) and [docs/codebase-ir.md](docs/codebase-ir.md).
 
 ```text
-LocalRepositorySource → RepositorySnapshot → Parser → ModuleResolver → DependencyGraph → CLI / JSON
+Repository → files → syntax → graph → application model → understand / web
 ```
 
-Schema version: `0.3`.
+Schema version: `0.4`.
 
 ## Security
 
@@ -160,8 +168,9 @@ Repositories are untrusted. The scanner does not install dependencies, run scrip
 
 - **Milestone A:** local scan, classification, manifests, IR JSON
 - **Milestone B:** Tree-sitter JS/TS parsing and symbol extraction
-- **Milestone C (this release):** module resolution and dependency graph
-- Later: framework-aware structure, optional AI explanations, web UI
+- **Milestone C:** module resolution and dependency graph
+- **Milestone D (this release):** application overview, `understand`, and a small web UI
+- Later: evidence-grounded plain-English explanations
 
 ## Contributing
 

@@ -34,6 +34,7 @@ describe("CLI", () => {
     const result = await runCli(["--help"]);
     expect(result.code).toBe(0);
     expect(result.stdout).toContain("Code Translator");
+    expect(result.stdout).toContain("understand");
     expect(result.stdout).toContain("inspect");
     expect(result.stdout).toContain("symbols");
     expect(result.stdout).toContain("dependencies");
@@ -50,6 +51,17 @@ describe("CLI", () => {
     const analysis = parseAnalysisJson(result.stdout);
     expect(analysis.repository.name).toBe("next-basic");
     expect(analysis.detectedTechnologies.some((tech) => tech.name === "Next.js")).toBe(true);
+  });
+
+  it("explains the SaaS fixture in plain language", async () => {
+    const result = await runCli(["understand", "./fixtures/app-saas-basic"]);
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain("What you built");
+    expect(result.stdout).toContain("Next.js");
+    expect(result.stdout).toContain("Payments");
+    expect(result.stdout.toLowerCase()).not.toContain("tree-sitter");
+    expect(result.stdout.toLowerCase()).not.toContain("graphnode");
+    expect(result.stdout.toLowerCase()).not.toContain("sourceexportid");
   });
 
   it("lists symbols for next-basic", async () => {

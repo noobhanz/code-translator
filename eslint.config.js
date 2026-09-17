@@ -10,6 +10,8 @@ export default tseslint.config(
       "**/.codetranslate/**",
       "**/coverage/**",
       "pnpm-lock.yaml",
+      "apps/web/.next/**",
+      "apps/web/next-env.d.ts",
     ],
   },
   eslint.configs.recommended,

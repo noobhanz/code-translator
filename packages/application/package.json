@@ -1,0 +1,23 @@
+{
+  "name": "@codetranslate/application",
+  "version": "0.4.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "tsc --noEmit -p tsconfig.json",
+    "test": "echo \"tested from workspace root\""
+  },
+  "dependencies": {
+    "@codetranslate/core": "workspace:*",
+    "@codetranslate/shared": "workspace:*"
+  }
+}

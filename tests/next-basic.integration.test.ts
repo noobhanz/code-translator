@@ -13,7 +13,7 @@ describe("inspect fixtures/next-basic", () => {
   it("produces a stable, relative, package-metadata-aware analysis", async () => {
     const { analysis } = await inspectRepository(fixture);
 
-    expect(analysis.schemaVersion).toBe("0.3");
+    expect(analysis.schemaVersion).toBe("0.4");
     expect(analysis.repository.name).toBe("next-basic");
     expect(analysis.repository.id.startsWith("repo_")).toBe(true);
 

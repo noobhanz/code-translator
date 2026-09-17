@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "preserve",
+    "moduleResolution": "bundler",
+    "paths": { "@/*": ["./*"] }
+  }
+}

@@ -63,7 +63,7 @@ describe("module resolution fixtures", () => {
     expect(
       analysis.diagnostics.some((item) => item.code === DiagnosticCode.IMPORT_UNRESOLVED),
     ).toBe(true);
-    expect(analysis.schemaVersion).toBe("0.3");
+    expect(analysis.schemaVersion).toBe("0.4");
   });
 
   it("creates re-export graph edges", async () => {

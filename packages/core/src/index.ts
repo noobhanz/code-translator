@@ -95,5 +95,33 @@ export {
   type SymbolKind,
   type SymbolNode,
 } from "./schema/source";
+export {
+  applicationAreaSchema,
+  applicationCapabilitySchema,
+  applicationEvidenceSchema,
+  applicationModelSchema,
+  applicationSummarySchema,
+  dataStoreDetectionSchema,
+  externalServiceDetectionSchema,
+  frameworkDetectionSchema,
+  userFacingSurfaceSchema,
+  type ApplicationArea,
+  type ApplicationAreaCategory,
+  type ApplicationCapability,
+  type ApplicationEntrypoint,
+  type ApplicationEvidence,
+  type ApplicationFlow,
+  type ApplicationModel,
+  type ApplicationPrimaryType,
+  type ApplicationRelationship,
+  type ApplicationSummary,
+  type DataStoreCategory,
+  type DataStoreDetection,
+  type DetectionBasis,
+  type ExternalServiceCategory,
+  type ExternalServiceDetection,
+  type FrameworkDetection,
+  type UserFacingSurface,
+} from "./schema/application";
 export { resolveOutputFilePath, writeRepositoryAnalysis } from "./pipeline/write-output";
 export type { RepositorySnapshot, RepositorySource, SnapshotFile } from "./types/snapshot";

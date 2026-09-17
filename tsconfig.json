@@ -8,7 +8,8 @@
       "@codetranslate/core": ["packages/core/src/index.ts"],
       "@codetranslate/ingest": ["packages/ingest/src/index.ts"],
       "@codetranslate/parser": ["packages/parser/src/index.ts"],
-      "@codetranslate/graph": ["packages/graph/src/index.ts"]
+      "@codetranslate/graph": ["packages/graph/src/index.ts"],
+      "@codetranslate/application": ["packages/application/src/index.ts"]
     }
   },
   "include": [
@@ -18,5 +19,5 @@
     "tests/**/*.ts",
     "vitest.config.ts"
   ],
-  "exclude": ["**/dist/**", "**/node_modules/**", "fixtures/**"]
+  "exclude": ["**/dist/**", "**/node_modules/**", "fixtures/**", "apps/web"]
 }

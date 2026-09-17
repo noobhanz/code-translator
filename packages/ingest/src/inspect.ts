@@ -5,6 +5,7 @@ import {
   type RepositoryAnalysis,
   type ScanOptions,
 } from "@codetranslate/core";
+import { detectApplication } from "@codetranslate/application";
 import { analyzeDependencies } from "@codetranslate/graph";
 import { analyzeSnapshotSources } from "@codetranslate/parser";
 import type { Logger } from "@codetranslate/shared";
@@ -51,7 +52,7 @@ export async function inspectRepository(
     readText: (relativePath) => snapshot.readText(relativePath),
   });
 
-  const analysis = buildRepositoryAnalysis({
+  const draft = buildRepositoryAnalysis({
     snapshot,
     manifests: parsedManifests.manifests,
     detectedTechnologies,
@@ -66,6 +67,19 @@ export async function inspectRepository(
     resolutions: dependencies.resolutions,
     graph: dependencies.graph,
     fileImportance: dependencies.fileImportance,
+  });
+  const application = detectApplication(draft);
+  const analysis = buildRepositoryAnalysis({
+    snapshot,
+    manifests: parsedManifests.manifests,
+    detectedTechnologies,
+    extraDiagnostics: draft.diagnostics,
+    packageManager: packageManager.packageManager,
+    fileAnalyses: parsedSources.analyses,
+    resolutions: dependencies.resolutions,
+    graph: dependencies.graph,
+    fileImportance: dependencies.fileImportance,
+    application,
   });
 
   return {
