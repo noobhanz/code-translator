@@ -1,0 +1,14 @@
+export { DEFAULT_IGNORE_PATTERNS } from "./ignore/defaults";
+export { loadIgnoreMatcher } from "./ignore/gitignore";
+export { isSensitivePath } from "./ignore/sensitive";
+export { classifyFile } from "./classify/category";
+export { inferLanguage } from "./classify/language";
+export { hasBinaryExtension, looksBinary } from "./binary/detect";
+export { hashFileContents } from "./hash/file-hash";
+export { LocalRepositorySource } from "./local/source";
+export { walkRepository } from "./local/walk";
+export { parseManifests } from "./manifests/detect";
+export { parsePackageManifest } from "./manifests/package-json";
+export { detectPackageManager } from "./manifests/package-manager";
+export { detectInstalledTechnologies } from "./manifests/technologies";
+export { inspectRepository, type InspectResult } from "./inspect";

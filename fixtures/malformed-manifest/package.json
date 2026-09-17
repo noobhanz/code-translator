@@ -1,0 +1,4 @@
+{
+  "name": "malformed-manifest",
+  "dependencies": "this-is-not-an-object",
+  "oops":

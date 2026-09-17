@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "0.1",
+  "repository": {
+    "id": "repo_fa1e1620e6173782",
+    "name": "ignored-files",
+    "source": {
+      "type": "local",
+      "path": "./fixtures/ignored-files"
+    },
+    "rootPath": "/Users/antonhorning/code-translator/fixtures/ignored-files",
+    "analyzedAt": "2026-09-17T15:09:30.057Z",
+    "analyzerVersion": "0.1.0"
+  },
+  "files": [
+    {
+      "id": "file_361d9a226e5c0e1c",
+      "path": ".gitignore",
+      "extension": "",
+      "category": "config",
+      "sizeBytes": 30,
+      "hash": "d4299b4742eb2b6452790fd93f6381fa757cbafcbb43c52d9b63205808e9f22e",
+      "binary": false,
+      "ignored": false
+    },
+    {
+      "id": "file_ca34e190f521d885",
+      "path": "custom-ignored.txt",
+      "extension": ".txt",
+      "category": "unknown",
+      "sizeBytes": 36,
+      "hash": "",
+      "binary": false,
+      "ignored": true,
+      "ignoreReason": "ignore rule"
+    },
+    {
+      "id": "file_cd496875fdeebcd5",
+      "path": "keep.txt",
+      "extension": ".txt",
+      "category": "unknown",
+      "sizeBytes": 8,
+      "hash": "b70f8f776f6bd11b9a0049b533e2a9efe061c704cc93ceb3988541524fba5e48",
+      "binary": false,
+      "ignored": false
+    },
+    {
+      "id": "file_64091b43a9ba7929",
+      "path": "src/app.ts",
+      "extension": ".ts",
+      "language": "TypeScript",
+      "category": "source",
+      "sizeBytes": 29,
+      "hash": "24f0aed3b45b022d0061999ab6f08ea95b3f0802209e3cd58cfc4c34b1d2a021",
+      "binary": false,
+      "ignored": false
+    }
+  ],
+  "manifests": [],
+  "detectedTechnologies": [],
+  "diagnostics": [],
+  "statistics": {
+    "filesDiscovered": 4,
+    "filesIncluded": 3,
+    "filesIgnored": 1,
+    "binaryFiles": 0,
+    "totalBytes": 103,
+    "includedBytes": 67,
+    "categoryCounts": {
+      "asset": 0,
+      "config": 1,
+      "documentation": 0,
+      "generated": 0,
+      "source": 1,
+      "test": 0,
+      "unknown": 1,
+      "vendor": 0
+    },
+    "languageCounts": {
+      "TypeScript": 1
+    },
+    "extensionCounts": {
+      ".ts": 1,
+      ".txt": 1,
+      "(none)": 1
+    }
+  }
+}
